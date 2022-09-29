@@ -6,6 +6,6 @@
 
 - create auth component at the services layer
 
-### 4 Context create UserProvider
+### 2 Context create UserProvider
 
 ### 3 Wrap app in index.js in UserProvider
