@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import Auth from './Auth/Auth';
+import Auth from './components/Auth/Auth';
+import Header from './components/Header/Header';
 
 function App() {
   return (
     <div className="App">
-      <div>this is app</div>
+      <Header />
       <Switch>
         <Route path="/auth/:type" component={Auth} />
       </Switch>

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { NavLink, Redirect, useParams } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-import { authUser } from '../services/auth';
+import { UserContext } from '../../context/UserContext';
+import { authUser } from '../../services/auth';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ export default function Auth() {
   return (
     <div className="auth box">
       <nav className="panel is-success">
-        <div className="panel-heading">Welcome to Alchemy Shopping List</div>
+        <div className="panel-heading">What Even is a Todo? Like, Really?</div>
         <div className="panel-tabs">
           <NavLink
             className="is-size-6 has-text-weight-bold"
