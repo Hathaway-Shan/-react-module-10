@@ -12,7 +12,7 @@ export default function Auth() {
 
   const submitAuth = async () => {
     const userResp = await authUser(email, password, type);
-    console.log('userContext is:', UserContext);
+    console.log('userContext is:', user);
     console.log('submitAuth ------>', userResp);
     setUser(userResp);
     //reset inputs
