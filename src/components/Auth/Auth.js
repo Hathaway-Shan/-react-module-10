@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { NavLink, Redirect, useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { authUser } from '../../services/auth';
 
@@ -12,8 +12,6 @@ export default function Auth() {
 
   const submitAuth = async () => {
     const userResp = await authUser(email, password, type);
-    console.log('userContext is:', user);
-    console.log('submitAuth ------>', userResp);
     setUser(userResp);
     //reset inputs
     setEmail('');
@@ -27,22 +25,6 @@ export default function Auth() {
   return (
     <div className="auth box">
       <nav className="panel is-success">
-        <div className="panel-tabs">
-          <NavLink
-            className="is-size-6 has-text-weight-bold"
-            to="/auth/sign-in"
-            activeClassName="is-active"
-          >
-            Sign In
-          </NavLink>
-          <NavLink
-            className="is-size-6 has-text-weight-bold"
-            to="/auth/sign-up"
-            activeClassName="is-active"
-          >
-            Sign Up
-          </NavLink>
-        </div>
         <div className="panel-block">
           <div className="field">
             <label className="label">Email</label>
@@ -50,7 +32,6 @@ export default function Auth() {
               <input
                 className="input"
                 type="email"
-                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -63,7 +44,6 @@ export default function Auth() {
               <input
                 className="input"
                 type="password"
-                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -72,7 +52,7 @@ export default function Auth() {
           </div>
         </div>
         <div className="control">
-          <button onClick={submitAuth} className="button is-success mt-2 mb-2">
+          <button onClick={submitAuth} className="button">
             Submit
           </button>
         </div>

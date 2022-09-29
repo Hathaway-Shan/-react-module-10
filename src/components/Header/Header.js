@@ -1,10 +1,11 @@
-import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { signOut } from '../../services/auth';
+import './Header.css';
 
 export default function Header() {
-  const [isActive, setIsActive] = useState(false);
+  // const [isActive, setIsActive] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
 
@@ -22,30 +23,33 @@ export default function Header() {
     <nav>
       <h1>My Todo App</h1>
 
-      <div className={`navbar-menu ${isActive ? 'is-active' : ''}`} id="navbar-list">
-        <div className="navbar-end">
-          <div className="navbar-item">
-            {!user && (
-              <div className="buttons">
-                <Link className="button is-primary" to="/auth/sign-up">
-                  <strong>Sign up</strong>
-                </Link>
-                <Link className="button is-light" to="/auth/sign-in">
-                  <strong>Sign in</strong>
-                </Link>
+      <div className="nav">
+        {!user && (
+          <nav>
+            <div className="buttons">
+              <div>
+                <NavLink className="link1" to="/auth/sign-up">
+                  Sign Up
+                </NavLink>
               </div>
-            )}
-            {user && (
-              <>
-                <div>hello {user.email}</div>
-                <button className="button is-light" onClick={handleLogout}>
-                  Sign Out
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+              <div>
+                <NavLink className="link2" to="/auth/sign-in">
+                  Sign In
+                </NavLink>
+              </div>
+            </div>
+          </nav>
+        )}
+        {user && (
+          <>
+            <div>hello {user.email}</div>
+            <button className="button is-light" onClick={handleLogout}>
+              Sign Out
+            </button>
+          </>
+        )}
       </div>
+
       {}
     </nav>
   );
