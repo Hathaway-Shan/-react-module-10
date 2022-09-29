@@ -12,6 +12,7 @@ export default function Auth() {
 
   const submitAuth = async () => {
     const userResp = await authUser(email, password, type);
+    console.log('userContext is:', UserContext);
     console.log('submitAuth ------>', userResp);
     setUser(userResp);
     //reset inputs
@@ -19,11 +20,13 @@ export default function Auth() {
     setPassword('');
   };
   //redirect to tasks goes here
+  if (user) {
+    return <Redirect to="/todos" />;
+  }
 
   return (
     <div className="auth box">
       <nav className="panel is-success">
-        <div className="panel-heading">What Even is a Todo? Like, Really?</div>
         <div className="panel-tabs">
           <NavLink
             className="is-size-6 has-text-weight-bold"
