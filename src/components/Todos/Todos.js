@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 //todos imports
 import { useTodos } from '../../hooks/useTodos';
-import { createListItem } from '../../services/todos';
+import { createListItem, deleteTodo } from '../../services/todos';
 
 export default function Todos() {
   const [todo, setTodo] = useState('');
@@ -15,7 +15,7 @@ export default function Todos() {
     return <Redirect to="/auth/sign-in" />;
   }
 
-  const handleNewItem = async () => {
+  const handleAddTodo = async () => {
     try {
       const newTodo = await createListItem(todo);
       setTodos((prev) => [...prev, newTodo]);
@@ -26,10 +26,25 @@ export default function Todos() {
     }
   };
 
+  const handleRemove = async (id) => {
+    const deletedItem = await deleteTodo(id);
+    setTodos((prevState) => prevState.filter((prevTodo) => prevTodo.id !== deletedItem.id));
+  };
+
   return (
     <div>
       <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
-      <button onClick={handleNewItem}>Add Todo</button>
+      <button onClick={handleAddTodo}>Add Todo</button>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            <span>{todo.description}</span>
+            <button className="deleteTodo" onClick={() => handleRemove(todo.id)}>
+              x
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
