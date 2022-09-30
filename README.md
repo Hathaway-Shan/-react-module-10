@@ -1,53 +1,149 @@
-# Alchemy React Base Template
+# Todo list from Scratch planning artifacts
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Order of operations
 
-Use this template for all your "from scratch" deliverables. To start, simply run
+### 1 Services create getUser function
 
-- `npm install`
-- `npm start`
+- create auth component at the services layer
 
-## Available Scripts
+```js
+import { client } from './client';
 
-In the project directory, you can run:
+export function getUser() {
+  return client.auth.currentUser;
+}
 
-### `npm start`
+export async function authUser(email, password, type) {
+  let response;
+  if (type === 'sign up') {
+    response = await client.auth.signUp({ email, password });
+  } else {
+    response = await client.auth.signIn({ email, password });
+  }
+  return response.user;
+}
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+export async function signOut() {
+  await client.auth.signOut();
+}
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 2 Context create UserProvider
 
-### `npm test`
+- import get user and create UserContext and User provider in context component
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```js
+import { createContext, useState } from 'react';
+//import getUser from services layer
+import { getUser } from '../services/auth';
 
-## The Golden Rule: 
+const UserContext = createContext();
 
-🦸 🦸‍♂️ `Stop starting and start finishing.` 🏁
+const UserProvider = ({ children }) => {
+  const currentUser = getUser();
+  const [user, setUser] = useState(currentUser);
 
-If you work on more than one feature at a time, you are guaranteed to multiply your bugs and your anxiety.
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+};
 
-## Making a plan in React
-1) Make a drawing of your app. Simple "wireframes" 
-1) Component Tree
-    1) Look at the drawing and break it down into Components. Label these Components explicitly (i.e., DogList, etc)
-    1) Draw a hierarchy (or tree) of components, describing which components are parents and which are children 
-    1) Looking at the drawing, make a list of your app's features. What should a user "be able to do" with this app?
-    1) Now look at your component tree: which components "go with" which features? Draw lines and make these connections explicitly.
-1) State
-    1) Look back at the drawing and your list of features and imagine using the app. What _state_ do you need to track? 
-    1) For each piece of state, ask: "When does it change?" If the answer is, "never", then it is not state.
-    1) Similarly, find all the 'events' (user clicks, form submit, on load etc) in your app. Ask one by one, "What state changes?" for each of these events. (This should feel like the the inverse of the previous step.)
-    1) Think about how to validate each of your state changes. How will I know if state changed in response to this event? (Hint: react dev tools or console.log usually helps here.)
-1) Data flow
-    1) Look at your hierarchy and ask: which components need access to which state? Another way to ask this is: for each component, what does this component need to "do its job?". This list becomes the "props" of the component.
-    1) If a child needs state from a parent, you will need to pass props. What will you name these props? 
-    1) Notice especially if two siblings need the same state: if so, you need a callback (i.e., debit card).
-1) Pick one feature from your list and build it out. Start with its parentmost component, and work down the component chain. Do not build another feature until this one is finished (and you can prove that it is finished by validating state change).
+export { UserProvider, UserContext };
+```
 
-## Additional considerations
-- Is any of your state redundant? For example, if you're tracking `wins`, `losses`, and `total`, you can probably get rid of `losses` state, and calculate it as `total - wins`.
-- Where should each piece of state live? How are you going to get data from where it lives to where it needs to be?
+### 3 Wrap app in index.js in UserProvider
+
+```js
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+```
+
+### 4 Create Auth Component
+
+- add type route and switch to app.js
+- create state for email and password in auth
+- use useParams hook to get type
+- allows user to sign up
+
+```js
+const submitAuth = async () => {
+  // TODO
+  const userResp = await authUser(email, password, type);
+  //set user
+  setUser(userResp);
+  //reset imputs
+  setEmail('');
+  setPassword('');
+};
+```
+
+### 5 Create Dynamic Header component with Nav bar
+
+- Nav bar shows links to sign in / sign up when user is not authenticated
+- Nav bar shows current user and logout option if user is authenticated
+
+```js
+<div className="nav">
+  {!user && (
+    <nav>
+      <div className="buttons">
+        <div>
+          <NavLink className="link1" to="/auth/sign-up">
+            Sign Up
+          </NavLink>
+        </div>
+        <div>
+          <NavLink className="link2" to="/auth/sign-in">
+            Sign In
+          </NavLink>
+        </div>
+      </div>
+    </nav>
+  )}
+  {user && (
+    <>
+      <div>hello {user.email}</div>
+      <button className="button is-light" onClick={handleLogout}>
+        Sign Out
+      </button>
+    </>
+  )}
+</div>
+```
+
+### 6 add Redirects
+
+- Signed out users should be redirected to sign up sign in page
+
+```js
+if (!user) {
+  return <Redirect to="/auth/sign-in" />;
+}
+```
+
+- there should be a catch all route that redirects to the sign in page
+
+```js
+<Route path="*">
+  <Redirect to="/auth/sign-up" />
+</Route>
+```
+
+- if no user is detected on the sign in page they should be redirected to the sign in page
+- once a user is signed in they should be redirected to the Todos page
+
+### 7 Add Todo functionality
+
+- Create Todo component in the services layer
+- Create useTodos hook
+-
+- Authenticated users should see a list of todo items
+- Authenticated users should be able to add items
+- (stretch) users can mark todo items complete
+- (stretch) users can delete todo items

@@ -1,0 +1,25 @@
+nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: bisque;
+}
+
+nav .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+nav .link1:hover {
+  color: blueviolet;
+}
+
+nav .link2:hover {
+  color: blueviolet;
+}
+
+nav a.active {
+  text-decoration: none;
+  font-weight: bold;
+}
