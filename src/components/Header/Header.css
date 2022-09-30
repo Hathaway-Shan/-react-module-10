@@ -2,6 +2,7 @@ nav {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: bisque;
 }
 
 nav .buttons {
